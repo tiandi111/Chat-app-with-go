@@ -15,7 +15,7 @@ type templateHandler struct {
 }
 
 func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Do calls the function if and only if Do is call for the first time for this instance of Once
+	// Do calls the function if and only if Do is called for the first time for this instance of Once
 	t.once.Do(func () {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})

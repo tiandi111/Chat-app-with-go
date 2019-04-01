@@ -6,10 +6,12 @@ import (
 
 type client struct {
 	socket	*websocket.Conn
-	send 	chan	[]byte
+	// This channel is used to send message from room to client
+	send 	chan	[]byte 
 	room 	*room
 }
 
+// Room read message from client
 func (c *client) read() {
 	defer c.socket.Close()
 	for {
@@ -21,6 +23,7 @@ func (c *client) read() {
 	}
 }
 
+// Room write message to client
 func (c *client) write() {
 	defer c.socket.Close()
 	for msg := range c.send {
