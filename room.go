@@ -35,6 +35,9 @@ func newRoom() *room {
 }
 
 func (r *room) run() {
+	// In the for loop below, only one block will be ran 
+	// at a time so that client map is only ever modified
+	// by one thing at a time
 	for {
 		select {
 			case client := <-r.join:
@@ -62,10 +65,10 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:	r,
 	}
 	r.join <- client
-	defer func() { r.leave <- client } () 
-	// start a new goroutine for client to write
+	defer func() { r.leave <- client } ()
+	// Start a goroutine to write 
 	go client.write()
-	// read from main thread
+	// Read from the current thread
 	client.read()
 }
 

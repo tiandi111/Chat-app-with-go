@@ -11,7 +11,7 @@ type client struct {
 	room 	*room
 }
 
-// Room read message from client
+// Read messages from client
 func (c *client) read() {
 	defer c.socket.Close()
 	for {
@@ -19,13 +19,15 @@ func (c *client) read() {
 		if err != nil {
 			return
 		}
+		// push the message to message queue c.room.forward of room
 		c.room.forward <- msg
 	}
 }
 
-// Room write message to client
+// Write messages to client
 func (c *client) write() {
 	defer c.socket.Close()
+	// write all messages read from channel c.send to cilent
 	for msg := range c.send {
 		err := c.socket.WriteMessage(websocket.TextMessage, msg)
 		if err != nil {
